@@ -7,7 +7,8 @@ const suggestBtn = document.getElementById('suggestBtn');
       handle = document.getElementById('handle'),
       form = document.getElementById('chatForm'),
       output = document.getElementById('output'),
-      feedback = document.getElementById('feedback');
+      feedback = document.getElementById('feedback'),
+      chatWindow = document.getElementById('chat-window');
 
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
@@ -38,9 +39,11 @@ message.addEventListener('keypress', () => {
 //Listen for events
 socket.on('chat', msg => {
   feedback.innerHTML = '';
-  output.innerHTML += '<p><strong>' + msg.handle + ':</strong>' + msg.message + '</p>';
+  output.innerHTML += '<p><strong>' + msg.handle + ':</strong> ' + msg.message + '</p>';
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 });
 
 socket.on('typing', userHandle => {
   feedback.innerHTML = "<p><em>" + userHandle + ' is typing a message...</em></p>';
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 });

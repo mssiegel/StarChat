@@ -1,13 +1,14 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>RandoChat: Become Whoever You Want</title>
+    <title>StarChat: Become Whoever You Want</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <div class="centered">
-      <h3>RandoChat: Choose a character and roleplay</h3>
+      <h3>StarChat: Choose a character and roleplay</h3>
       <button id="suggestBtn">Suggest Character:</button> <p id="charSuggestion">Character suggested below</p>
    </div>
     <div id="mario-chat">
@@ -16,9 +17,9 @@
         <div id="feedback"></div>
       </div>
       <form id='chatForm'>
-      <input id="handle" type="text" placeholder="Who you are"/>
-      <input id="message" type="text" placeholder="What to say"/>
-      <button id="submitBtn" type="submit">Send</button>
+        <input id="handle" type="text" placeholder="Who you are"/>
+        <input id="message" type="text" placeholder="What to say"/>
+        <button id="submitBtn" type="submit">Send</button>
     </form>
     </div>
     <script src="/chat.js"></script>
