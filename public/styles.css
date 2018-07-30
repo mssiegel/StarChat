@@ -11,21 +11,40 @@ h3{
   color: #6A8520;
 }
 
-#charSuggestion {
+.inline-block {
   display: inline-block;
-  font-size: 16px;
-  color: grey;
-  margin-left: 10px;
 }
 
-#suggestBtn {
-  background-color: cyan;
-  color: grey;
+.max-width-320 {
+  max-width: 320px;
+}
+
+#chosen-char {
+  border: 1px solid grey;
+}
+
+.btn {
+  margin: 10px;
   padding: 12px;
   font-size: 16px;
+  cursor: pointer;
 }
 
-#mario-chat{
+#suggest-btn {
+  background-color: cyan;
+  color: grey;
+}
+
+.hide {
+  display: none;
+}
+
+#start-chat-btn {
+  background-color: #6495ED;
+  color: white;
+}
+
+#chat-container {
     max-width: 600px;
     margin: 30px auto;
     border: 1px solid #ddd;
@@ -33,7 +52,7 @@ h3{
     border-radius: 2px;
 }
 
-#chat-window{
+#chat-window {
     min-height: 100px;
     max-height: 400px;
     overflow: auto;
@@ -76,7 +95,7 @@ input{
     font-size: 16px;
 }
 
-#submitBtn{
+#send-message-btn{
     background: #575ed8;
     color: #fff;
     font-size: 18px;
@@ -84,4 +103,5 @@ input{
     padding: 12px 0;
     width: 100%;
     border-radius: 0 0 2px 2px;
+    cursor: pointer;
 }
