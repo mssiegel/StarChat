@@ -60,11 +60,18 @@ io.on('connection', socket => {
   socket.on('disconnect', endChat); //copy of 'leave room', may be able to combine functions
 
   function endChat(){
+    const socketIndex = chatQueue.indexOf(socket);
+    //remove socket from queue; necessary when socket joined queue then disconnects before pairing
+    if(socketIndex !== -1) chatQueue.splice(socketIndex, 1);
+
     const room = rooms[socket.id];
     if(room){
       socket.to(room).emit('chat end');
       const socketAndPeerIDs = room.split('#');
-      socketAndPeerIDs.forEach(socketID => allUsers[socketID].leave(room));
+      socketAndPeerIDs.forEach(socketID => {
+        const curSocket = allUsers[socketID];
+        curSocket.leave(room);
+      });
     }
   }
 

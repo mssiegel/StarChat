@@ -60,15 +60,14 @@ h3{
 }
 
 #output p{
-    padding: 14px 0px;
+    padding: 6px 0px;
     margin: 0 20px;
-    border-bottom: 1px solid #e9e9e9;
     color: #555;
 }
 
 #feedback p{
     color: #aaa;
-    padding: 14px 0px;
+    padding: 6px 0px;
     margin: 0 20px;
 }
 
@@ -105,3 +104,16 @@ input{
     border-radius: 0 0 2px 2px;
     cursor: pointer;
 }
+
+/* Media Queries */
+/*@media only screen and (max-width: 600px){
+  .btn, #suggest-btn {
+    margin: 3px 3px 1px 3px;
+    padding: 2px 3px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    background-color: yellow;
+  }
+}
+*/

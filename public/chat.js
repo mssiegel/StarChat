@@ -21,6 +21,26 @@ const suggestBtn = document.getElementById('suggest-btn');
 //suggests a new character - always different than previous one
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
+
+{//ensures both character input fields always display same values
+  userName.addEventListener('input',() => {
+    chosenChar.value = userName.value;
+  });
+  chosenChar.addEventListener('input', () => {
+    userName.value = chosenChar.value;
+  });
+}
+
+function scrollToBottomOfChat(){
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function tearDownForm(){
+  form.classList.add('hide')
+  startChatBtn.classList.remove('hide');
+  endChatBtn.classList.add('hide');
+}
+
 function suggestNewCharacter() {
   let randomChar;
   do {
@@ -46,17 +66,13 @@ form.addEventListener('submit', (e) => {
   });
   output.innerHTML += '<p><strong>' + userName.value + ':</strong> ' + message.value + '</p>';
   message.value = '';
+  scrollToBottomOfChat();
   e.preventDefault();
 });
 
 message.addEventListener('keypress', () => {
   socket.emit('typing', userName.value);
 });
-
-function tearDownForm(){
-  form.classList.add('hide')
-  startChatBtn.classList.remove('hide');
-}
 
 endChatBtn.addEventListener('click', () => {
   output.innerHTML += `<p><em><strong>You</strong> have left the chat</em></p>`;
@@ -67,7 +83,7 @@ endChatBtn.addEventListener('click', () => {
 
 //LISTEN for events
 socket.on('chat start' , chatInfo => {
-  [endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+  [form, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
   lookingForSomeone.innerHTML = "";
   output.innerHTML = `<p><em><strong>${chatInfo.peerName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
   feedback.innerHTML = '';
@@ -81,10 +97,13 @@ socket.on('chat end', function(data) {
 socket.on('chat message', msg => {
   feedback.innerHTML = '';
   output.innerHTML += '<p><strong>' + msg.userName + ':</strong> ' + msg.message + '</p>';
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  scrollToBottomOfChat();
 });
 
+let typingNotice;
 socket.on('typing', userName => {
-  feedback.innerHTML = "<p><em>" + (userName || 'Someone') + ' is typing a message...</em></p>';
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  feedback.innerHTML = "<p><em>" + (userName || 'Someone') + ' is typing...</em></p>';
+  if(typingNotice) clearTimeout(typingNotice);
+  typingNotice = setTimeout(() => feedback.innerHTML = '', 5000)
+  scrollToBottomOfChat();
 });
