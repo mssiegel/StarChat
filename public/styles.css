@@ -59,6 +59,8 @@ h3{
 
 #chat-window {
     min-height: 100px;
+    max-height: 400px;
+    overflow: auto;
     background: #f9f9f9;
 }
 
