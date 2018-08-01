@@ -38,7 +38,8 @@ practiceModeBtn.addEventListener('click', () => {
 }
 
 function scrollToBottomOfChat(){
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  //scrolls to bottom of sendMessageBtn
+  sendMessageBtn.scrollIntoView(false);
 }
 
 function tearDownForm(){
@@ -73,7 +74,6 @@ form.addEventListener('submit', (e) => {
   output.innerHTML += '<p><strong>' + userName.value + ':</strong> ' + message.value + '</p>';
   message.value = '';
   message.focus();
-  scrollToBottomOfChat();
   e.preventDefault();
 });
 

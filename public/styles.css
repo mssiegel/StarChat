@@ -123,26 +123,13 @@ input{
     position: -webkit-sticky;
     top: 0;
   }
-/*
-  #suggest-btn, #start-chat-btn, #end-chat-btn {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-  }
 
-  #practice-mode-btn {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 45px;
-    background-color: purple;
-  }
-*/
   #end-chat-btn {
     float: right;
   }
 
   #send-message-btn{
-    padding: 4px;
+    padding: 5px;
     font-size: 16px;
   }
 }
