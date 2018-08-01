@@ -66,11 +66,12 @@ form.addEventListener('submit', (e) => {
   });
   output.innerHTML += '<p><strong>' + userName.value + ':</strong> ' + message.value + '</p>';
   message.value = '';
+  message.focus();
   scrollToBottomOfChat();
   e.preventDefault();
 });
 
-message.addEventListener('keypress', () => {
+message.addEventListener('input', () => {
   socket.emit('typing', userName.value);
 });
 
@@ -87,6 +88,7 @@ socket.on('chat start' , chatInfo => {
   lookingForSomeone.innerHTML = "";
   output.innerHTML = `<p><em><strong>${chatInfo.peerName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
   feedback.innerHTML = '';
+  message.focus();
 });
 
 socket.on('chat end', function(data) {
@@ -104,6 +106,6 @@ let typingNotice;
 socket.on('typing', userName => {
   feedback.innerHTML = "<p><em>" + (userName || 'Someone') + ' is typing...</em></p>';
   if(typingNotice) clearTimeout(typingNotice);
-  typingNotice = setTimeout(() => feedback.innerHTML = '', 5000)
+  typingNotice = setTimeout(() => feedback.innerHTML = '', 5000);
   scrollToBottomOfChat();
 });
