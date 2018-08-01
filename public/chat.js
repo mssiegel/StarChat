@@ -21,6 +21,12 @@ const suggestBtn = document.getElementById('suggest-btn');
 //suggests a new character - always different than previous one
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
+practiceModeBtn.addEventListener('click', () => {
+  [form, chatContainer].forEach(element => element.classList.remove('hide'));
+  output.innerHTML = `<p><strong>You have entered practice mode! Try out various characters, make your own stories, experiment...</strong></p>`;
+  message.focus();
+  practiceModeBtn.classList.add('hide');
+});
 
 {//ensures both character input fields always display same values
   userName.addEventListener('input',() => {
@@ -78,15 +84,17 @@ message.addEventListener('input', () => {
 endChatBtn.addEventListener('click', () => {
   output.innerHTML += `<p><em><strong>You</strong> have left the chat</em></p>`;
   tearDownForm();
+  practiceModeBtn.classList.remove('hide');
   socket.emit('leave room');
 });
 
 
 //LISTEN for events
-socket.on('chat start' , chatInfo => {
+socket.on('chat start' , peersName => {
   [form, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+  practiceModeBtn.classList.add('hide');
   lookingForSomeone.innerHTML = "";
-  output.innerHTML = `<p><em><strong>${chatInfo.peerName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
+  output.innerHTML = `<p><em><strong>${peersName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
   feedback.innerHTML = '';
   message.focus();
 });
@@ -94,6 +102,7 @@ socket.on('chat start' , chatInfo => {
 socket.on('chat end', function(data) {
     output.innerHTML += `<p><em><strong>The other person</strong> has left the chat</em></p>`;
     tearDownForm();
+    practiceModeBtn.classList.remove('hide');
 });
 
 socket.on('chat message', msg => {

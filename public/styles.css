@@ -110,16 +110,33 @@ input{
     cursor: pointer;
 }
 
+
 /* Media Queries */
 @media only screen and (max-width: 600px){
-  .btn, #suggest-btn {
+  .btn {
     margin: 3px 3px 1px 3px;
     padding: 2px 3px;
+  }
+
+  #sticky-buttons {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+  }
+/*
+  #suggest-btn, #start-chat-btn, #end-chat-btn {
     position: sticky;
     position: -webkit-sticky;
     top: 0;
   }
 
+  #practice-mode-btn {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 45px;
+    background-color: purple;
+  }
+*/
   #end-chat-btn {
     float: right;
   }
@@ -130,10 +147,11 @@ input{
   }
 }
 
-  @media only screen and (min-width: 601px){
-    .btn, #suggest-btn {
-      position: sticky;
-      position: -webkit-sticky;
-      top: 0;
+@media only screen and (min-width: 601px){
+  .btn, #suggest-btn {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
   }
+
 }
