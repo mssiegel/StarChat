@@ -1,6 +1,7 @@
 body{
-    font-family: 'Nunito';
+  font-family: 'Nunito';
 }
+
 
 .centered{
   text-align: center;
@@ -44,18 +45,20 @@ h3{
   color: white;
 }
 
+#looking-for-someone{
+  color: blue;
+  font-size: 26px;
+  font-weight: bold;
+}
+
 #chat-container {
     max-width: 600px;
-    margin: 30px auto;
-    border: 1px solid #ddd;
+    margin: 30px auto 0 auto;
     box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
-    border-radius: 2px;
 }
 
 #chat-window {
     min-height: 100px;
-    max-height: 400px;
-    overflow: auto;
     background: #f9f9f9;
 }
 
@@ -106,14 +109,29 @@ input{
 }
 
 /* Media Queries */
-/*@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px){
   .btn, #suggest-btn {
     margin: 3px 3px 1px 3px;
     padding: 2px 3px;
     position: sticky;
     position: -webkit-sticky;
     top: 0;
-    background-color: yellow;
+  }
+
+  #end-chat-btn {
+    float: right;
+  }
+
+  #send-message-btn{
+    padding: 4px;
+    font-size: 16px;
   }
 }
-*/
+
+  @media only screen and (min-width: 601px){
+    .btn, #suggest-btn {
+      position: sticky;
+      position: -webkit-sticky;
+      top: 0;
+  }
+}

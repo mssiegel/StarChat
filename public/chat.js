@@ -56,7 +56,7 @@ function suggestNewCharacter() {
 startChatBtn.addEventListener('click', () => {
   socket.emit('new login', chosenChar.value);
   startChatBtn.classList.add('hide');
-  lookingForSomeone.innerHTML = "LOOKING FOR SOMEONE TO PAIR YOUR WITH..."
+  lookingForSomeone.innerHTML = "LOOKING FOR SOMEONE TO PAIR YOU WITH..."
 });
 
 form.addEventListener('submit', (e) => {
