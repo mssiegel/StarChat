@@ -101,7 +101,7 @@ socket.on('chat start' , peersName => {
 });
 
 socket.on('chat end', function(data) {
-    output.innerHTML += `<p><em><strong>The other person</strong> has left the chat</em></p>`;
+    output.innerHTML += `<p><em><strong>Your peer</strong> has left the chat</em></p>`;
     tearDownForm();
     practiceModeBtn.classList.remove('hide');
 });
