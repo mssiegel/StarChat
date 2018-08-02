@@ -2,7 +2,6 @@ body{
   font-family: 'Nunito';
 }
 
-
 .centered{
   text-align: center;
 }
@@ -120,7 +119,7 @@ input{
 /* Media Queries */
 
 /* shrink buttons when width is too small OR (if very wide AND small height) */
-@media only screen and (max-width: 600px), (min-width: 601px) and (max-height: 500px) {
+@media only screen and (max-width: 750px), (min-width: 601px) and (max-height: 500px) {
   .btn {
     margin: 2px 3px;
     padding: 2px 3px;
