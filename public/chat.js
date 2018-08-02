@@ -18,7 +18,6 @@ const suggestBtn = document.getElementById('suggest-btn');
       lookingForSomeone = document.getElementById('looking-for-someone');
 
 
-//suggests a new character - always different than previous one
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
 practiceModeBtn.addEventListener('click', () => {
@@ -48,6 +47,7 @@ function tearDownForm(){
   endChatBtn.classList.add('hide');
 }
 
+//suggests a new character - always different than previous one
 function suggestNewCharacter() {
   let randomChar;
   do {
@@ -57,6 +57,7 @@ function suggestNewCharacter() {
   } while (randomChar === userName.value);
   chosenChar.value = randomChar;
   userName.value = randomChar;
+  message.focus();
 }
 
 //EMIT events
