@@ -22,7 +22,7 @@ suggestBtn.addEventListener('click', suggestNewCharacter);
 
 practiceModeBtn.addEventListener('click', () => {
   [form, chatContainer].forEach(element => element.classList.remove('hide'));
-  output.innerHTML = `<p><strong>You have entered practice mode! Try out various characters, make your own stories, experiment...</strong></p>`;
+  output.innerHTML = `<p><em>You have entered </em><strong>PRACTICE MODE</strong><em>! Try out various characters, make your own stories, experiment...</em></p>`;
   message.focus();
   practiceModeBtn.classList.add('hide');
 });
