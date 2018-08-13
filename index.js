@@ -1,6 +1,9 @@
 const express = require('express');
 const socket = require('socket.io');
 
+//New Relic pins Heroku server to keep it always awake
+require('newrelic'); 
+
 //App setup
 const app = express();
 const port = process.env.PORT || 4000;
