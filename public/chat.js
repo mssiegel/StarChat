@@ -69,7 +69,7 @@ function tearDownForm(){
 function suggestNewCharacter() {
   let randomChar;
   do {
-    const characterList = ['Ceo of Whoopee Cushions R Us', 'Elfin Archer', 'Circus Clown with Powers', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of a Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Beggar with Super Powered Charm', 'Vampire Hunter', 'Alien Warlord', 'Alien with a Green Tail', 'Pirate Captain', 'Sorcerer with a maniacal laugh', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Warrior Kingdom Rebel', 'Tiny Warlord', 'Dancing Champion', "Scuba Diver Who Can't Swim", 'Potty Training Coach', 'Forgetful Daredevil', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach'];
+    const characterList = ['Whoopee Cushion Maker', 'Elfin Archer', 'Powerful Circus Clown', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Charming Beggar', 'Vampire Hunter', 'Alien Warlord', 'Alien with green tail', 'Pirate Captain', 'Laughing Sorcerer', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Rebel Leader', 'Tiny Warlord', 'Dancing Champion', 'Scared Scuba Diver', 'Potty Training Coach', 'Forgetful Daredevil', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach'];
     const randomChoice = Math.floor(Math.random() * characterList.length);
     randomChar = characterList[randomChoice];
   } while (randomChar === userName.value);
