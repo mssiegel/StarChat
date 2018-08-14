@@ -106,7 +106,7 @@ message.addEventListener('input', () => {
 });
 
 endChatBtn.addEventListener('click', () => {
-  output.innerHTML += `<p><em><strong>You</strong> have left the chat</em></p>`;
+  output.innerHTML += `<p id="left-chat"><em><strong>You</strong> have left the chat</em></p>`;
   tearDownForm();
   practiceModeBtn.classList.remove('hide');
   buttons.forEach(btn => btn.classList.remove('small-btn'));
@@ -126,7 +126,7 @@ socket.on('chat start' , peersName => {
 });
 
 socket.on('chat end', function(data) {
-    output.innerHTML += `<p><em><strong>Your peer</strong> has left the chat</em></p>`;
+    output.innerHTML += `<p id="left-chat"><em><strong>Your peer</strong> has left the chat</em></p>`;
     buttons.forEach(btn => btn.classList.remove('small-btn'));
     tearDownForm();
     practiceModeBtn.classList.remove('hide');

@@ -112,6 +112,11 @@ body{
     color: #575ed8;
 }
 
+#output #left-chat {
+  font-size: 28px;
+  color: red;
+}
+
 input{
     padding: 10px 20px;
     border: 0;
