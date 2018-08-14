@@ -7,27 +7,29 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <h3>StarChat: Choose a character and roleplay</h3>
-    <p class="inline-block">Your character:</p>
-    <input class="inline-block max-width-320" id="chosen-char" type="text" autofocus placeholder="Your Character" />
-    <br>
-    <p id="looking-for-someone"></p>
-    <div id='sticky-buttons'>
-      <button class="btn" id="suggest-btn">Suggest Character</button>
-      <button class="btn" id="start-chat-btn">Start new chat</button>
-      <button class="btn" id="practice-mode-btn">Practice Mode</button>
-      <button class="btn hide" id="end-chat-btn">End Chat</button>
-    </div>
-    <div class="hide" id="chat-container">
-      <div id="chat-window">
-        <div id="output"></div>
-        <div id="feedback"></div>
+    <div class="center">
+      <h3>StarChat: Choose a character and roleplay</h3>
+      <p class="inline-block">Your character:</p>
+      <input class="inline-block max-width-320" id="chosen-char" type="text" autofocus placeholder="Your Character" />
+      <br>
+      <p id="looking-for-someone"></p>
+      <div id='sticky-buttons'>
+        <button class="btn" id="suggest-btn">Suggest Character</button>
+        <button class="btn" id="start-chat-btn">Start new chat</button>
+        <button class="btn" id="practice-mode-btn">Practice Mode</button>
+        <button class="btn hide" id="end-chat-btn">End Chat</button>
       </div>
-      <form id='chat-form' autocomplete="off">
-        <input id="user-name" type="text" placeholder="Your Character"/>
-        <input id="message" type="text" placeholder="What to say"/>
-        <button id="send-message-btn" type="submit">Send</button>
-    </form>
+      <div class="hide" id="chat-container">
+        <div id="chat-window">
+          <div id="output"></div>
+          <div id="feedback"></div>
+        </div>
+        <form id='chat-form' autocomplete="off">
+          <input id="user-name" type="text" placeholder="Your Character"/>
+          <input id="message" type="text" placeholder="What to say"/>
+          <button id="send-message-btn" type="submit">Send</button>
+      </form>
+      </div>
     </div>
     <script src="/chat.js"></script>
   </body>

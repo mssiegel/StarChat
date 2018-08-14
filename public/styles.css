@@ -2,7 +2,7 @@ body{
   font-family: 'Nunito';
 }
 
-.centered{
+.center{
   text-align: center;
 }
 
@@ -23,31 +23,50 @@ h3{
   border: 1px solid grey;
 }
 
+.hide {
+  display: none;
+}
+
 #sticky-buttons {
   position: sticky;
   position: -webkit-sticky;
   top: 0;
 }
 
+
 .btn {
-  margin: 2px 15px 5px 5px;
-  padding: 6px;
+  margin: 5px 20px;
+  padding: 18px;
   font-size: 16px;
   cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 #suggest-btn {
-  background-color: cyan;
-  color: grey;
+  background-color: #3fff00;
+  color: white;
 }
-
-.hide {
-  display: none;
+#suggest-btn:hover {
+  background-color: #39e600;
 }
 
 #start-chat-btn {
-  background-color: #6495ED;
+  background-color: #1f66e5;
   color: white;
+}
+#start-chat-btn:hover {
+  background-color: #185bd2;
+}
+
+#practice-mode-btn:hover {
+  background-color: #ccc;
+}
+
+.disabled {
+  opacity: 0.2 !important;
+  cursor: not-allowed;
 }
 
 #looking-for-someone{
@@ -120,7 +139,7 @@ input{
 
 /* shrink buttons when width is too small OR (if very wide AND small height) */
 @media only screen and (max-width: 900px), (min-width: 601px) and (max-height: 500px) {
-  .btn {
+  .small-btn {
     margin: 2px 3px;
     padding: 2px 3px;
   }
