@@ -2,15 +2,15 @@
 const socket = io();
 
 // Query DOM
-const suggestBtn = document.getElementById('suggest-btn');
-      message = document.getElementById('message'),
+const message = document.getElementById('message'),
       userName = document.getElementById('user-name'),
-      form = document.getElementById('chat-form'),
+      sendMessageForm = document.getElementById('send-message-form'),
       chatContainer = document.getElementById('chat-container'),
       chatWindow = document.getElementById('chat-window'),
       output = document.getElementById('output'),
       feedback = document.getElementById('feedback'),
       chosenChar = document.getElementById('chosen-char'),
+      suggestBtn = document.getElementById('suggest-btn'),
       startChatBtn = document.getElementById('start-chat-btn'),
       practiceModeBtn = document.getElementById('practice-mode-btn'),
       endChatBtn = document.getElementById('end-chat-btn'),
@@ -20,50 +20,68 @@ const suggestBtn = document.getElementById('suggest-btn');
       lookingForSomeone = document.getElementById('looking-for-someone');
 
 suggestBtn.addEventListener('click', suggestNewCharacter);
-if(!chosenChar.value) chatBtns.forEach(btn => {
-  btn.classList.add('disabled');
-  btn.disabled = true;
-});
+
+//disables chatBtns if character input field is blank
+disableBtnsIfNoCharChosen();
+
+//ensures both character input fields have same values. Also disables chatBtns if blank input
+keepCharInputFieldsTheSame();
 
 practiceModeBtn.addEventListener('click', () => {
-  [form, chatContainer].forEach(element => element.classList.remove('hide'));
-  buttons.forEach(btn => btn.classList.add('small-btn'));
+  [sendMessageForm, chatContainer].forEach(element => element.classList.remove('hide'));
   output.innerHTML = `<p><em>You have entered </em><strong>PRACTICE MODE</strong><em>! Try out various characters, make your own stories, experiment...</em></p>`;
-  message.focus();
-  practiceModeBtn.classList.add('hide');
+  prepareChat();
 });
 
-{
-  //1. ensures both character input fields always display same values
-  //2. disables chat buttons if character input field is blank
-  userName.addEventListener('input',() => {
-    chosenChar.value = userName.value;
-  });
-  chosenChar.addEventListener('input', () => {
-    userName.value = chosenChar.value;
-    chatBtns.forEach(btn => {
-      if (chosenChar.value) {
-        btn.classList.remove('disabled');
-        btn.disabled = false;
-      }
-      else {
-        btn.classList.add('disabled');
-        btn.disabled = true;
-      }
-    });
-  });
-}
 
-function scrollToBottomOfChat(){
-  chatWindow.scrollTop = chatWindow.scrollHeight;  //scrolls chatWindow to bottom
-  sendMessageBtn.scrollIntoView(false);   //scrolls view port to bottom of sendMessageBtn
-}
+//EMIT events
+startChatBtn.addEventListener('click', () => {
+  socket.emit('new login', chosenChar.value);
+  startChatBtn.classList.add('hide');
+  lookingForSomeone.innerHTML = "LOOKING FOR SOMEONE TO PAIR YOU WITH..."
+});
 
-function tearDownForm(){
-  form.classList.add('hide')
-  startChatBtn.classList.remove('hide');
-  endChatBtn.classList.add('hide');
-}
+sendMessageForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  sendChatMessage();
+});
+
+message.addEventListener('input', () => {
+  //emits 'typing' if user starts typing a message
+  socket.emit('typing', userName.value);
+});
+
+endChatBtn.addEventListener('click', () => {
+  endChat('You');
+  socket.emit('leave room');
+});
+
+
+//LISTEN for events
+
+socket.on('chat start' , peersName => {
+  [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+  lookingForSomeone.innerHTML = "";
+  output.innerHTML = `<p><em><strong>${peersName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
+  prepareChat();
+});
+
+socket.on('chat end', () => {
+  endChat('Your peer');
+});
+
+socket.on('chat message', msg => {
+  feedback.innerHTML = '';
+  outputMessage(msg.userName, msg.message);
+  scrollToBottomOfChat();
+});
+
+socket.on('typing', userName => {
+  userTyping(userName);
+});
+
+
+//HELPER FUNCTIONS
 
 //suggests a new character - always different than previous one
 function suggestNewCharacter() {
@@ -82,66 +100,66 @@ function suggestNewCharacter() {
   message.focus();
 }
 
-//EMIT events
-startChatBtn.addEventListener('click', () => {
-  socket.emit('new login', chosenChar.value);
-  startChatBtn.classList.add('hide');
-  lookingForSomeone.innerHTML = "LOOKING FOR SOMEONE TO PAIR YOU WITH..."
-});
-
-form.addEventListener('submit', (e) => {
-  socket.emit('chat message', {
-    message: message.value,
-    userName: userName.value
+function disableBtnsIfNoCharChosen(){
+  if (chosenChar.value) chatBtns.forEach(btn => {
+    btn.classList.remove('disabled');
+    btn.disabled = false;
+  })
+  else chatBtns.forEach(btn => {
+    btn.classList.add('disabled');
+    btn.disabled = true;
   });
-  output.innerHTML += '<p><strong>' + userName.value + ':</strong> ' + message.value + '</p>';
+}
+
+function keepCharInputFieldsTheSame(){
+  userName.addEventListener('input',() => {
+    chosenChar.value = userName.value;
+    disableBtnsIfNoCharChosen();
+  });
+  chosenChar.addEventListener('input', () => {
+    userName.value = chosenChar.value;
+    disableBtnsIfNoCharChosen();
+  });
+}
+
+function sendChatMessage() {
+  socket.emit('chat message', {
+    userName: userName.value,
+    message: message.value
+  });
+  outputMessage(userName.value, message.value);
   message.value = '';
   message.focus();
-  e.preventDefault();
   scrollToBottomOfChat();
-});
+}
 
-message.addEventListener('input', () => {
-  socket.emit('typing', userName.value);
-});
+function scrollToBottomOfChat(){
+  //scrolls viewport to bottom of sendMessageBtn
+  sendMessageBtn.scrollIntoView(false);
+}
 
-endChatBtn.addEventListener('click', () => {
-  output.innerHTML += `<p id="left-chat"><em><strong>You</strong> have left the chat</em></p>`;
-  tearDownForm();
-  practiceModeBtn.classList.remove('hide');
+function endChat(name){
+  output.innerHTML += `<p id="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
   buttons.forEach(btn => btn.classList.remove('small-btn'));
-  socket.emit('leave room');
-});
+  [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
+  chatBtns.forEach(btn => btn.classList.remove('hide'));
+  feedback.innerHTML = '';
+}
 
+let eraseTypingNotice;
+function userTyping(userName) {
+  feedback.innerHTML = "<p><em>" + (userName || 'Someone') + ' is typing...</em></p>';
+  if(eraseTypingNotice) clearTimeout(eraseTypingNotice);
+  eraseTypingNotice = setTimeout(() => feedback.innerHTML = '', 5000);
+  scrollToBottomOfChat();
+}
 
-//LISTEN for events
-socket.on('chat start' , peersName => {
-  [form, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+function outputMessage(userName, message){
+  output.innerHTML += `<p><strong>${userName}:</strong> ${message}</p>`;
+}
+
+function prepareChat(){
   buttons.forEach(btn => btn.classList.add('small-btn'));
   practiceModeBtn.classList.add('hide');
-  lookingForSomeone.innerHTML = "";
-  output.innerHTML = `<p><em><strong>${peersName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
-  feedback.innerHTML = '';
   message.focus();
-});
-
-socket.on('chat end', function(data) {
-    output.innerHTML += `<p id="left-chat"><em><strong>Your peer</strong> has left the chat</em></p>`;
-    buttons.forEach(btn => btn.classList.remove('small-btn'));
-    tearDownForm();
-    practiceModeBtn.classList.remove('hide');
-});
-
-socket.on('chat message', msg => {
-  feedback.innerHTML = '';
-  output.innerHTML += '<p><strong>' + msg.userName + ':</strong> ' + msg.message + '</p>';
-  scrollToBottomOfChat();
-});
-
-let typingNotice;
-socket.on('typing', userName => {
-  feedback.innerHTML = "<p><em>" + (userName || 'Someone') + ' is typing...</em></p>';
-  if(typingNotice) clearTimeout(typingNotice);
-  typingNotice = setTimeout(() => feedback.innerHTML = '', 5000);
-  scrollToBottomOfChat();
-});
+}
