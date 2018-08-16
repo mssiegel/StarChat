@@ -77,10 +77,26 @@ body{
   cursor: not-allowed;
 }
 
-#looking-for-someone{
-  color: blue;
+/* make .important-text of font-size: 26px, font-weight: bold*/
+
+#app-state {
   font-size: 26px;
   font-weight: bold;
+}
+
+.internet-reconnected {
+  color: green;
+  border: 1px dashed green;
+}
+
+.internet-error {
+  color: red;
+  border: 1px dashed red;
+}
+
+.looking-for-peer {
+  color: blue;
+  border: 1px dashed blue;
 }
 
 #chat-container {

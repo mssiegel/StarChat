@@ -15,14 +15,17 @@ const message = document.getElementById('message'),
       practiceModeBtn = document.getElementById('practice-mode-btn'),
       endChatBtn = document.getElementById('end-chat-btn'),
       sendMessageBtn = document.getElementById('send-message-btn'),
-      chatBtns = [startChatBtn, practiceModeBtn];
-      buttons = document.querySelectorAll('.btn');
-      lookingForSomeone = document.getElementById('looking-for-someone');
+      chatBtns = [startChatBtn, practiceModeBtn],
+      buttons = document.querySelectorAll('.btn'),
+      appState = document.getElementById('app-state');
+      //internetError = document.querySelector('.internet-error'),
+      //internetReconnected = document.querySelector('.internet-reconnected'),
+      //lookingForSomeone = document.getElementById('looking-for-someone');
 
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
 //disables chatBtns if character input field is blank
-disableBtnsIfNoCharChosen();
+disableOrEnableChatBtns();
 
 //ensures both character input fields have same values. Also disables chatBtns if blank input
 keepCharInputFieldsTheSame();
@@ -35,11 +38,30 @@ practiceModeBtn.addEventListener('click', () => {
 
 
 //EMIT events
-startChatBtn.addEventListener('click', () => {
-  socket.emit('new login', chosenChar.value);
-  startChatBtn.classList.add('hide');
-  lookingForSomeone.innerHTML = "LOOKING FOR SOMEONE TO PAIR YOU WITH..."
+
+let recheckForInternet;
+startChatBtn.addEventListener('click', async () => {
+  let internet = await checkInternetConnection();
+  if(internet) {
+    socket.emit('new login', chosenChar.value);
+    startChatBtn.classList.add('hide');
+    appState.className = "looking-for-peer";
+    appState.innerHTML = "Looking for someone to pair you with..."
+  }
+  else {
+    appState.className = 'internet-error';
+    appState.innerHTML = "Oh No. There's no internet connection. Please reconnect and try again";
+    recheckForInternet = setInterval(async () => {
+      internet = await checkInternetConnection();
+      if (internet) {
+        clearTimeout(recheckForInternet);
+        appState.className = "internet-reconnected";
+        appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
+      }
+    }, 2000);
+  }
 });
+
 
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -61,7 +83,8 @@ endChatBtn.addEventListener('click', () => {
 
 socket.on('chat start' , peersName => {
   [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
-  lookingForSomeone.innerHTML = "";
+  appState.className = "hide";
+  appState.innerHTML = "";
   output.innerHTML = `<p><em><strong>${peersName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
   prepareChat();
 });
@@ -93,14 +116,15 @@ function suggestNewCharacter() {
   } while (randomChar === userName.value);
   chosenChar.value = randomChar;
   userName.value = randomChar;
-  if(chosenChar.value) chatBtns.forEach(btn => {
+  chatBtns.forEach(btn => {
     btn.classList.remove('disabled');
     btn.disabled = false;
   });
   message.focus();
 }
 
-function disableBtnsIfNoCharChosen(){
+//disables or enables chatBtns depending on if character input field is blank
+function disableOrEnableChatBtns(){
   if (chosenChar.value) chatBtns.forEach(btn => {
     btn.classList.remove('disabled');
     btn.disabled = false;
@@ -114,11 +138,11 @@ function disableBtnsIfNoCharChosen(){
 function keepCharInputFieldsTheSame(){
   userName.addEventListener('input',() => {
     chosenChar.value = userName.value;
-    disableBtnsIfNoCharChosen();
+    disableOrEnableChatBtns();
   });
   chosenChar.addEventListener('input', () => {
     userName.value = chosenChar.value;
-    disableBtnsIfNoCharChosen();
+    disableOrEnableChatBtns();
   });
 }
 
@@ -162,4 +186,15 @@ function prepareChat(){
   buttons.forEach(btn => btn.classList.add('small-btn'));
   practiceModeBtn.classList.add('hide');
   message.focus();
+}
+
+async function checkInternetConnection(){
+  //returns true if fetches HEAD opaque response from either google or amazon homepages
+  //returns false if neither of the fetch requests work
+  const request = {method: 'HEAD', mode: 'no-cors'};
+  try {return await fetch('https://www.google.com', request)}
+  catch(e){
+     try {return await fetch('https://www.amazon.com/', request)}
+     catch(e){return false}
+   }
 }
