@@ -18,50 +18,22 @@ const message = document.getElementById('message'),
       chatBtns = [startChatBtn, practiceModeBtn],
       buttons = document.querySelectorAll('.btn'),
       appState = document.getElementById('app-state');
-      //internetError = document.querySelector('.internet-error'),
-      //internetReconnected = document.querySelector('.internet-reconnected'),
-      //lookingForSomeone = document.getElementById('looking-for-someone');
 
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
-//disables chatBtns if character input field is blank
-disableOrEnableChatBtns();
-
-//ensures both character input fields have same values. Also disables chatBtns if blank input
-keepCharInputFieldsTheSame();
+//1. ensures both character input fields have same values
+//2. disables chatBtns if character input field is blank
+monitorCharInputFields();
 
 practiceModeBtn.addEventListener('click', () => {
-  [sendMessageForm, chatContainer].forEach(element => element.classList.remove('hide'));
-  output.innerHTML = `<p><em>You have entered </em><strong>PRACTICE MODE</strong><em>! Try out various characters, make your own stories, experiment...</em></p>`;
-  prepareChat();
+  startPracticeMode();
 });
 
 
 //EMIT events
 
 let recheckForInternet;
-startChatBtn.addEventListener('click', async () => {
-  let internet = await checkInternetConnection();
-  if(internet) {
-    socket.emit('new login', chosenChar.value);
-    startChatBtn.classList.add('hide');
-    appState.className = "looking-for-peer";
-    appState.innerHTML = "Looking for someone to pair you with..."
-  }
-  else {
-    appState.className = 'internet-error';
-    appState.innerHTML = "Oh No. There's no internet connection. Please reconnect and try again";
-    recheckForInternet = setInterval(async () => {
-      internet = await checkInternetConnection();
-      if (internet) {
-        clearTimeout(recheckForInternet);
-        appState.className = "internet-reconnected";
-        appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
-      }
-    }, 2000);
-  }
-});
-
+startChatBtn.addEventListener('click', startChatBtnClicked);
 
 sendMessageForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -82,11 +54,7 @@ endChatBtn.addEventListener('click', () => {
 //LISTEN for events
 
 socket.on('chat start' , peersName => {
-  [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
-  appState.className = "hide";
-  appState.innerHTML = "";
-  output.innerHTML = `<p><em><strong>${peersName || 'Someone'}</strong> has entered. Get the conversation going.</em></p>`;
-  prepareChat();
+  startChat(peersName);
 });
 
 socket.on('chat end', () => {
@@ -135,7 +103,9 @@ function disableOrEnableChatBtns(){
   });
 }
 
-function keepCharInputFieldsTheSame(){
+function monitorCharInputFields(){
+  disableOrEnableChatBtns();
+
   userName.addEventListener('input',() => {
     chosenChar.value = userName.value;
     disableOrEnableChatBtns();
@@ -197,4 +167,40 @@ async function checkInternetConnection(){
      try {return await fetch('https://www.amazon.com/', request)}
      catch(e){return false}
    }
+}
+
+async function startChatBtnClicked() {
+  let internet = await checkInternetConnection();
+  if(internet) {
+    socket.emit('new login', chosenChar.value);
+    startChatBtn.classList.add('hide');
+    appState.className = "looking-for-peer";
+    appState.innerHTML = "Looking for someone to pair you with..."
+  }
+  else {
+    appState.className = 'internet-error';
+    appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
+    recheckForInternet = setInterval(async () => {
+      internet = await checkInternetConnection();
+      if (internet) {
+        clearInterval(recheckForInternet);
+        appState.className = "internet-reconnected";
+        appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
+      }
+    }, 2000);
+  }
+}
+
+function startPracticeMode() {
+  [sendMessageForm, chatContainer].forEach(element => element.classList.remove('hide'));
+  output.innerHTML = `<p><em>You have entered </em><strong>PRACTICE MODE</strong><em>! Try out various characters, make your own stories, experiment...</em></p>`;
+  prepareChat();
+}
+
+function startChat(peersName) {
+  [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+  appState.className = "hide";
+  appState.innerHTML = "";
+  output.innerHTML = `<p><em>You got matched with <strong>${peersName}</strong>. Start chatting...</em></p>`;
+  prepareChat();
 }
