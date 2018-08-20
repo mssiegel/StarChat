@@ -52,7 +52,7 @@ message.addEventListener('input', () => {
 
 endChatBtn.addEventListener('click', () => {
   endChat('You');
-  socket.emit('leave room');
+  socket.emit('end chat');
 });
 
 

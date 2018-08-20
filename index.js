@@ -59,8 +59,8 @@ io.on('connection', socket => {
     socket.to(room).emit('chat message', msg);
   });
 
-  socket.on('leave room', endChat);
-  socket.on('disconnect', endChat); //copy of 'leave room', may be able to combine functions
+  socket.on('end chat', endChat);
+  socket.on('disconnect', endChat);
 
   function endChat(){
     const socketIndex = chatQueue.indexOf(socket);
