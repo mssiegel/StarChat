@@ -184,10 +184,10 @@ function startPracticeMode() {
 //ASYNC HELPER FUNCTIONS
 
 async function startChatBtnClicked() {
+  startChatBtn.classList.add('hide');
   const internet = await checkInternetConnection(noInternetError);
   if(internet) {
     socket.emit('new login', chosenChar.value);
-    startChatBtn.classList.add('hide');
     appState.className = "looking-for-peer";
     appState.innerHTML = "Looking for someone to pair you with...";
     //checks internet every 8 seconds
