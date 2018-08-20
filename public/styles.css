@@ -128,7 +128,7 @@ body{
     color: #575ed8;
 }
 
-#output #left-chat {
+#output .left-chat {
   font-size: 28px;
   color: red;
 }

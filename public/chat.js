@@ -19,6 +19,11 @@ const message = document.getElementById('message'),
       buttons = document.querySelectorAll('.btn'),
       appState = document.getElementById('app-state');
 
+//Global variable for setInterval
+let constantInternet;
+
+//BASIC SET UP
+
 suggestBtn.addEventListener('click', suggestNewCharacter);
 
 //1. ensures both character input fields have same values
@@ -30,9 +35,8 @@ practiceModeBtn.addEventListener('click', () => {
 });
 
 
-//EMIT events
+//EMIT socket events
 
-let recheckForInternet;
 startChatBtn.addEventListener('click', startChatBtnClicked);
 
 sendMessageForm.addEventListener('submit', (e) => {
@@ -51,7 +55,7 @@ endChatBtn.addEventListener('click', () => {
 });
 
 
-//LISTEN for events
+//LISTEN for socket events
 
 socket.on('chat start' , peersName => {
   startChat(peersName);
@@ -78,7 +82,7 @@ socket.on('typing', userName => {
 function suggestNewCharacter() {
   let randomChar;
   do {
-    const characterList = ['Whoopee Cushion Maker', 'Elfin Archer', 'Powerful Circus Clown', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Charming Beggar', 'Vampire Hunter', 'Alien Warlord', 'Alien with green tail', 'Pirate Captain', 'Laughing Sorcerer', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Rebel Leader', 'Tiny Warlord', 'Dancing Champion', 'Scared Scuba Diver', 'Potty Training Coach', 'Forgetful Daredevil', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach'];
+    const characterList = ['Whoopee Cushion Maker', 'Elfin Archer', 'Powerful Circus Clown', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Charming Beggar', 'Vampire Hunter', 'Alien Warlord', 'Alien with green tail', 'Pirate Captain', 'Laughing Sorcerer', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Rebel Leader', 'Tiny Warlord', 'Dancing Champion', 'Scared Scuba Diver', 'Potty Training Coach', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach', 'Karate Dude', 'Forgetful Surgeon', 'Evil Lawyer'];
     const randomChoice = Math.floor(Math.random() * characterList.length);
     randomChar = characterList[randomChoice];
   } while (randomChar === userName.value);
@@ -133,11 +137,12 @@ function scrollToBottomOfChat(){
 }
 
 function endChat(name){
-  output.innerHTML += `<p id="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
+  output.innerHTML += `<p class="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
   buttons.forEach(btn => btn.classList.remove('small-btn'));
   [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
   chatBtns.forEach(btn => btn.classList.remove('hide'));
   feedback.innerHTML = '';
+  clearInterval(constantInternet);
 }
 
 let eraseTypingNotice;
@@ -158,37 +163,12 @@ function prepareChat(){
   message.focus();
 }
 
-async function checkInternetConnection(){
-  //returns true if fetches HEAD opaque response from either google or amazon homepages
-  //returns false if neither of the fetch requests work
-  const request = {method: 'HEAD', mode: 'no-cors'};
-  try {return await fetch('https://www.google.com', request)}
-  catch(e){
-     try {return await fetch('https://www.amazon.com/', request)}
-     catch(e){return false}
-   }
-}
-
-async function startChatBtnClicked() {
-  let internet = await checkInternetConnection();
-  if(internet) {
-    socket.emit('new login', chosenChar.value);
-    startChatBtn.classList.add('hide');
-    appState.className = "looking-for-peer";
-    appState.innerHTML = "Looking for someone to pair you with..."
-  }
-  else {
-    appState.className = 'internet-error';
-    appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
-    recheckForInternet = setInterval(async () => {
-      internet = await checkInternetConnection();
-      if (internet) {
-        clearInterval(recheckForInternet);
-        appState.className = "internet-reconnected";
-        appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
-      }
-    }, 2000);
-  }
+function startChat(peersName) {
+  [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
+  appState.className = "hide";
+  appState.innerHTML = "";
+  output.innerHTML = `<p><em>You got matched with <strong>${peersName}</strong>. Start chatting...</em></p>`;
+  prepareChat();
 }
 
 function startPracticeMode() {
@@ -197,10 +177,55 @@ function startPracticeMode() {
   prepareChat();
 }
 
-function startChat(peersName) {
-  [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
-  appState.className = "hide";
-  appState.innerHTML = "";
-  output.innerHTML = `<p><em>You got matched with <strong>${peersName}</strong>. Start chatting...</em></p>`;
-  prepareChat();
+
+//ASYNC HELPER FUNCTIONS
+
+async function startChatBtnClicked() {
+  const internet = await checkInternetConnection(noInternetError);
+  if(internet) {
+    socket.emit('new login', chosenChar.value);
+    startChatBtn.classList.add('hide');
+    appState.className = "looking-for-peer";
+    appState.innerHTML = "Looking for someone to pair you with...";
+    //checks internet every 8 seconds
+    //ending chat or losing internet always clears constantInternet
+    constantInternet = setInterval(() => {
+      checkInternetConnection(noInternetError, 'You lost internet and')},
+      8000);
+  }
+}
+
+
+async function checkInternetConnection(callback, argForCallback){
+  //if internet returns truthy value
+  //if no internet runs callback and returns undefined
+  const request = {method: 'HEAD', mode: 'no-cors'};
+  try {return await fetch('https://www.google.com', request)}
+  catch(e){
+     try {return await fetch('https://www.amazon.com/', request)}
+     catch(e){
+       if(callback) callback(argForCallback);
+     }
+   }
+}
+
+function noInternetError(msg){
+    endChat(msg);
+    appState.className = 'internet-error';
+    appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
+    startChatBtn.classList.add('hide');
+    continuallyRecheckInternet();
+}
+
+//rechecks internet connection every 4 seconds
+async function continuallyRecheckInternet() {
+  const recheckForInternet = setInterval(async () => {
+    const internet = await checkInternetConnection();
+    if (internet) {
+      clearInterval(recheckForInternet);
+      appState.className = "internet-reconnected";
+      appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
+      startChatBtn.classList.remove('hide');
+    }
+  }, 4000);
 }
