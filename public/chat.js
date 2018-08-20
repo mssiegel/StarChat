@@ -19,8 +19,9 @@ const message = document.getElementById('message'),
       buttons = document.querySelectorAll('.btn'),
       appState = document.getElementById('app-state');
 
-//Global variable for setInterval
+//Global variables
 let constantInternet;
+let chatInSession;
 
 //BASIC SET UP
 
@@ -137,6 +138,7 @@ function scrollToBottomOfChat(){
 }
 
 function endChat(name){
+  chatInSession = false;
   output.innerHTML += `<p class="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
   buttons.forEach(btn => btn.classList.remove('small-btn'));
   [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
@@ -164,6 +166,7 @@ function prepareChat(){
 }
 
 function startChat(peersName) {
+  chatInSession = true;
   [sendMessageForm, endChatBtn, chatContainer].forEach(element => element.classList.remove('hide'));
   appState.className = "hide";
   appState.innerHTML = "";
@@ -195,7 +198,6 @@ async function startChatBtnClicked() {
   }
 }
 
-
 async function checkInternetConnection(callback, argForCallback){
   //if internet returns truthy value
   //if no internet runs callback and returns undefined
@@ -210,10 +212,11 @@ async function checkInternetConnection(callback, argForCallback){
 }
 
 function noInternetError(msg){
-    endChat(msg);
+    if (chatInSession) endChat(msg);
     appState.className = 'internet-error';
     appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
     startChatBtn.classList.add('hide');
+    clearInterval(constantInternet);
     continuallyRecheckInternet();
 }
 
