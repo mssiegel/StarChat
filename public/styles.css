@@ -77,8 +77,6 @@ body{
   cursor: not-allowed;
 }
 
-/* make .important-text of font-size: 26px, font-weight: bold*/
-
 #app-state {
   font-size: 26px;
   font-weight: bold;
@@ -97,6 +95,13 @@ body{
 .looking-for-peer {
   color: blue;
   border: 1px dashed blue;
+  animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: .1;
+  }
 }
 
 #chat-container {
