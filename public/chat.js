@@ -197,7 +197,7 @@ async function startChatBtnClicked() {
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
       checkInternetConnection(noInternetError, youLostInternet)},
-      6000);
+      3000);
   }
 }
 
