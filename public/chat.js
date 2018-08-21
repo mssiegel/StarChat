@@ -138,12 +138,14 @@ function scrollToBottomOfChat(){
 }
 
 function endChat(name){
-  chatInSession = false;
-  output.innerHTML += `<p class="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
-  buttons.forEach(btn => btn.classList.remove('small-btn'));
-  [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
-  chatBtns.forEach(btn => btn.classList.remove('hide'));
-  feedback.innerHTML = '';
+  if (chatInSession){
+    chatInSession = false;
+    output.innerHTML += `<p class="left-chat"><em><strong>${name}</strong> left the chat</em></p>`;
+    buttons.forEach(btn => btn.classList.remove('small-btn'));
+    [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
+    chatBtns.forEach(btn => btn.classList.remove('hide'));
+    feedback.innerHTML = '';
+  }
   clearInterval(constantInternet);
 }
 
@@ -212,11 +214,10 @@ async function checkInternetConnection(callback, argForCallback){
 }
 
 function noInternetError(msg){
-    if (chatInSession) endChat(msg);
+    endChat(msg);
     appState.className = 'internet-error';
     appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
     startChatBtn.classList.add('hide');
-    clearInterval(constantInternet);
     continuallyRecheckInternet();
 }
 

@@ -15,7 +15,11 @@ const server = app.listen(port, () => {
 app.use(express.static('public'));
 
 //Socket setup
-const io = socket(server);
+const io = socket(server, {
+  //in case of client losing internet, ends connection if hasn't received connection after 15 seconds
+  pingTimeOut: 15000,
+  pingInterval: 10000
+});
 
 const chatQueue = []; // array of sockets waiting to chat
 const rooms = {}; // map socket.id => room
@@ -76,6 +80,7 @@ io.on('connection', socket => {
         curSocket.leave(room);
       });
     }
+    delete room[socket.id];
   }
 
   socket.on('typing', userName => {
