@@ -193,11 +193,11 @@ async function startChatBtnClicked() {
     socket.emit('new login', chosenChar.value);
     appState.className = "looking-for-peer";
     appState.innerHTML = "Looking for someone to pair you with...";
-    //checks internet every 6 seconds
+    //checks internet every 8 seconds
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
       checkInternetConnection(noInternetError, youLostInternet)},
-      3000);
+      8000);
   }
 }
 
