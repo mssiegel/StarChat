@@ -83,7 +83,7 @@ socket.on('typing', userName => {
 function suggestNewCharacter() {
   let randomChar;
   do {
-    const characterList = ['Whoopee Cushion Maker', 'Elfin Archer', 'Powerful Circus Clown', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Charming Beggar', 'Vampire Hunter', 'Alien Warlord', 'Alien with green tail', 'Pirate Captain', 'Laughing Sorcerer', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Rebel Leader', 'Tiny Warlord', 'Dancing Champion', 'Scared Scuba Diver', 'Potty Training Coach', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach', 'Karate Dude', 'Forgetful Surgeon', 'Evil Lawyer'];
+    const characterList = ['Whoopee Cushion Maker', 'Elfin Archer', 'Powerful Circus Clown', 'Ballerina Spy', 'Website Builder', 'Mad Prankster', 'Mighty Knight', 'Dragon slayer', 'Viking Warrior','Leader of Warrior Army','Laughing Jack', 'Plumbing SuperHero', '9th Level Wizard', 'Charming Beggar', 'Vampire Hunter', 'Alien Warlord', 'Alien with green tail', 'Pirate Captain', 'Laughing Sorcerer', 'Maniac Magician', 'Hypnotist Master', 'Defender of the Righteous', 'Job Applicant', 'Rebel Leader', 'Tiny Warlord', 'Dancing Champion', 'Scared Scuba Diver', 'Potty Training Coach', 'Founder of Farters R Us', 'Therapist', 'News Reporter', 'Food Salesperson', 'Productivity Coach', 'Karate Dude', 'Forgetful Surgeon', 'Evil Lawyer' ,'Empathetic listener', 'Dude with diaper gun'];
     const randomChoice = Math.floor(Math.random() * characterList.length);
     randomChar = characterList[randomChoice];
   } while (randomChar === userName.value);
@@ -196,7 +196,7 @@ async function startChatBtnClicked() {
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
       checkInternetConnection(noInternetError, 'You lost internet and')},
-      15000);
+      45000);// change back to 15
   }
 }
 

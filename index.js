@@ -92,13 +92,13 @@ io.on('connection', socket => {
   function endChat(){
     const room = rooms[socket.id];
     if(room){
-      socket.to(room).emit('chat end');
+      io.in(room).emit('chat end');
       const socketAndPeerIDs = room.split('#');
       socketAndPeerIDs.forEach(socketID => {
         const curSocket = allUsers[socketID];
         if(curSocket) curSocket.leave(room);
       });
-    }
+    };
   }
 
 });
