@@ -22,6 +22,7 @@ const message = document.getElementById('message'),
 //Global variables
 let constantInternet;
 let chatInSession;
+const youLostInternet = 'You lost internet and';
 
 //BASIC SET UP
 
@@ -192,11 +193,11 @@ async function startChatBtnClicked() {
     socket.emit('new login', chosenChar.value);
     appState.className = "looking-for-peer";
     appState.innerHTML = "Looking for someone to pair you with...";
-    //checks internet every 8 seconds
+    //checks internet every 6 seconds
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
-      checkInternetConnection(noInternetError, 'You lost internet and')},
-      45000);// change back to 15
+      checkInternetConnection(noInternetError, youLostInternet)},
+      6000);
   }
 }
 
@@ -214,6 +215,10 @@ async function checkInternetConnection(callback, argForCallback){
 }
 
 function noInternetError(msg){
+    //if you reconnect while still the same socket you will tell server 'end chat' which will notify server to end chat for your peer
+    //if you reconnect after many seconds, you will be assigned a new socket and emitted 'end chat' will have no effect
+    if(msg === youLostInternet) socket.emit('end chat');
+
     endChat(msg);
     appState.className = 'internet-error';
     appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
