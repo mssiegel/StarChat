@@ -145,8 +145,8 @@ function endChat(name){
     [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
     chatBtns.forEach(btn => btn.classList.remove('hide'));
     feedback.innerHTML = '';
+    clearInterval(constantInternet);
   }
-  clearInterval(constantInternet);
 }
 
 let eraseTypingNotice;
@@ -196,7 +196,7 @@ async function startChatBtnClicked() {
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
       checkInternetConnection(noInternetError, 'You lost internet and')},
-      8000);
+      15000);
   }
 }
 
