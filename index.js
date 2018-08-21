@@ -6,8 +6,10 @@ const socket = require('socket.io');
 
 //App setup
 const app = express();
+const server = require('http').Server(app);
+
 const port = process.env.PORT || 4000;
-const server = app.listen(port, () => {
+server.listen(port, () => {
   console.log(`listening to requests on port ${port}`);
 });
 
