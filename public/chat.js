@@ -226,6 +226,7 @@ function noInternetError(msg){
     endChat(msg);
     appState.className = 'internet-error';
     appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
+    startChatBtn.classList.remove('hide');
     disableButton(startChatBtn);
     continuallyRecheckInternet();
 }
