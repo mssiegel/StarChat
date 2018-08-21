@@ -99,14 +99,18 @@ function suggestNewCharacter() {
 
 //disables or enables chatBtns depending on if character input field is blank
 function disableOrEnableChatBtns(){
-  if (chosenChar.value) chatBtns.forEach(btn => {
-    btn.classList.remove('disabled');
-    btn.disabled = false;
-  })
-  else chatBtns.forEach(btn => {
-    btn.classList.add('disabled');
-    btn.disabled = true;
-  });
+  if (chosenChar.value) chatBtns.forEach(enableButton);
+  else chatBtns.forEach(disableButton);
+}
+
+function enableButton(btn){
+  btn.classList.remove('disabled');
+  btn.disabled = false;
+}
+
+function disableButton(btn){
+  btn.classList.add('disabled');
+  btn.disabled = true;
 }
 
 function monitorCharInputFields(){
@@ -222,7 +226,7 @@ function noInternetError(msg){
     endChat(msg);
     appState.className = 'internet-error';
     appState.innerHTML = "Oh no. There's no internet connection. Please reconnect and try again";
-    startChatBtn.classList.add('hide');
+    disableButton(startChatBtn);
     continuallyRecheckInternet();
 }
 
@@ -234,7 +238,7 @@ async function continuallyRecheckInternet() {
       clearInterval(recheckForInternet);
       appState.className = "internet-reconnected";
       appState.innerHTML = "Whoohoo! Internet was reconnected. You're good to go!";
-      startChatBtn.classList.remove('hide');
+      enableButton(startChatBtn);
     }
   }, 4000);
 }
