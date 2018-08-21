@@ -17,7 +17,7 @@ server.listen(port, () => {
 app.use(express.static('public'));
 
 //Socket setup
-const io = socket(server, {pingInterval: 10000 });
+const io = socket(server, {pingInterval: 10000, pingTimeout: 15000 });
 
   //in case of client losing internet, ends connection if hasn't received connection after 15 seconds
 //  pingTimeout: 15000,
@@ -82,7 +82,7 @@ io.on('connection', socket => {
         curSocket.leave(room);
       });
     }
-    delete room[socket.id];
+    //delete room[socket.id];
   }
 
   socket.on('typing', userName => {
