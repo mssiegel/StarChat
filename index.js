@@ -17,7 +17,7 @@ app.use(express.static('public'));
 //Socket setup
 const io = socket(server, {
   //in case of client losing internet, ends connection if hasn't received connection after 15 seconds
-  pingTimeOut: 15000,
+  pingTimeout: 15000,
   pingInterval: 10000
 });
 
