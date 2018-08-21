@@ -15,10 +15,10 @@ const server = app.listen(port, () => {
 app.use(express.static('public'));
 
 //Socket setup
-const io = socket(server)//, {
+const io = socket(server, {pingInterval: 10000 });
+
   //in case of client losing internet, ends connection if hasn't received connection after 15 seconds
 //  pingTimeout: 15000,
-//  pingInterval: 10000
 //});
 
 const chatQueue = []; // array of sockets waiting to chat
