@@ -17,11 +17,9 @@ server.listen(port, () => {
 app.use(express.static('public'));
 
 //Socket setup
-const io = socket(server, {pingInterval: 10000, pingTimeout: 15000 });
+//pingInterval sends ping every 10 seconds to make sure client still connected - necessary if client loses connection to internet
+const io = socket(server, {pingInterval: 10000});
 
-  //in case of client losing internet, ends connection if hasn't received connection after 15 seconds
-//  pingTimeout: 15000,
-//});
 
 const chatQueue = []; // array of sockets waiting to chat
 const rooms = {}; // map socket.id => room
