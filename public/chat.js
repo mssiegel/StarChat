@@ -150,8 +150,10 @@ function endChat(name){
     [sendMessageForm, endChatBtn].forEach(element => element.classList.add('hide'));
     chatBtns.forEach(btn => btn.classList.remove('hide'));
     feedback.innerHTML = '';
-    clearInterval(constantInternet);
   }
+  //clearing constantInternet must be outside if statement
+  //because chatInSession will be false if loses internet during #looking-for-someone before chat starts
+  clearInterval(constantInternet);
 }
 
 let eraseTypingNotice;
@@ -209,13 +211,8 @@ async function checkInternetConnection(callback, argForCallback){
   //if internet returns truthy value
   //if no internet runs callback and returns undefined
   const request = {method: 'HEAD', mode: 'no-cors'};
-  try {return await fetch('https://www.google.com', request)}
-  catch(e){
-     try {return await fetch('https://www.amazon.com/', request)}
-     catch(e){
-       if(callback) callback(argForCallback);
-     }
-   }
+  try {return await (fetch('https://www.google.com', request)|| fetch('https://www.amazon.com/', request)) }
+  catch(e){ if(callback) callback(argForCallback);}
 }
 
 function noInternetError(msg){
