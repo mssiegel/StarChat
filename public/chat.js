@@ -199,11 +199,11 @@ async function startChatBtnClicked() {
     socket.emit('new login', chosenChar.value);
     appState.className = "looking-for-peer";
     appState.innerHTML = "Looking for someone to pair you with...";
-    //checks internet every 8 seconds
+    //checks internet every 7 seconds
     //ending chat or losing internet always clears constantInternet
     constantInternet = setInterval(() => {
       checkInternetConnection(noInternetError, youLostInternet)},
-      8000);
+      7000);
   }
 }
 
@@ -222,6 +222,7 @@ async function checkInternetConnection(callback, argForCallback){
 
 function noInternetError(msg){
     //if you reconnect while still the same socket you will tell server 'end chat' which will notify server to end chat for your peer
+    //this is necessary as noInternetError automatically ends chat for you - so you must emit event to also end it for your peer
     //if you reconnect after many seconds, you will be assigned a new socket and emitted 'end chat' will have no effect
     if(msg === youLostInternet) socket.emit('end chat');
 

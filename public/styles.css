@@ -13,6 +13,11 @@ body{
   font-weight: 300;
 }
 
+#magical-penguin {
+  width: 148px;
+  height: 192px;
+}
+
 .large-font {
   font-size: 24px;
 }
