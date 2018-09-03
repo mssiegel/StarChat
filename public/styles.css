@@ -6,11 +6,12 @@ body{
   text-align: center;
 }
 
-#title{
-  padding-top: 15px;
-  color: #134e00;
+h1 {
   font-size: 44px;
   font-weight: 300;
+  text-align: center;
+  text-shadow: 1px 1px 1px grey;
+  -webkit-margin-after: 15px;
 }
 
 #magical-penguin {
