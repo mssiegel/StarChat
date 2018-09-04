@@ -1,10 +1,7 @@
-//New Relic pins Heroku server to keep it always awake
-require('newrelic');
-
+//App setup
 const express = require('express');
 const socket = require('socket.io');
 
-//App setup
 const app = express();
 const server = require('http').Server(app);
 
